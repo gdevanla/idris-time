@@ -1,0 +1,14 @@
+package idris-time
+
+brief = "A Idris port of Haskell's time package."
+sourcedir = src
+version = 0.0.1
+author = "Guru Devanla <grdvnl@gmail.com>"
+homepage = 'todo'
+sourceloc = 'todo'
+pkgs = contrib
+
+executable = "idris-time-main"
+main = Main
+
+modules = Internal.CTimespec
