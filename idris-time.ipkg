@@ -11,4 +11,5 @@ pkgs = contrib
 executable = "idris-time-main"
 main = Main
 
-modules = Internal.CTimespec
+modules = Data.Time.Clock.Internal.UTCTime
+        , Data.Time.Clock.Internal.Fixed
