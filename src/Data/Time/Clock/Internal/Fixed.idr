@@ -3,17 +3,21 @@ module Fixed
 public export
 data Fixed a = MkFixed Integer
 
-export
+public export
 data E12
 data E9
 
-export
-pico : Type
-pico = Fixed E12
+public export
+Pico : Type
+Pico = Fixed E12
 
 export
-nano : Type
-nano = Fixed E9
+Nano : Type
+Nano = Fixed E9
+
+public export
+Show (Fixed a) where
+  show (MkFixed x) = show x
 
 Eq (Fixed a) where
   (MkFixed a) == (MkFixed b) = a == b
@@ -21,45 +25,78 @@ Eq (Fixed a) where
 Ord (Fixed a) where
   compare (MkFixed a) (MkFixed b) = compare a b
 
+export
 interface HasResolution (a: Type) where
   resolution : (f : Type -> Type) -> f a -> Integer
 
+export
+HasResolution E12 where
+  resolution _ _ =  1000000000000
+
+public export
 Enum (Fixed a) where
   pred (MkFixed x) = MkFixed (pred x)
   toNat (MkFixed x) = toNat x
   fromNat x = MkFixed (toIntegerNat x)
 
+-- Currently unable to express `*` in terms of `div` due to totality checking
 -- implementation (HasResolution a) => Num (Fixed a) where
 --   (+) (MkFixed x) (MkFixed y) = MkFixed (x + y)
 --   (*) fa@(MkFixed x) (MkFixed y)  = MkFixed (div (x * y) (resolution {a} Fixed fa))
 --   fromInteger x = MkFixed x
 
-addFixed : Fixed a -> Fixed a -> Fixed a
-addFixed (MkFixed x) (MkFixed y) = MkFixed (x + y)
+export
+add: Fixed a -> Fixed a -> Fixed a
+add (MkFixed x) (MkFixed y) = MkFixed (x + y)
 
-subFixed : Fixed a -> Fixed a -> Fixed a
-subFixed (MkFixed x) (MkFixed y) = MkFixed (x - y)
+export
+(+) : Fixed a -> Fixed a -> Fixed a
+(+) = add
 
-negateFixed: Fixed a -> Fixed a
-negateFixed (MkFixed x) = MkFixed (negate x)
+export
+sub : Fixed a -> Fixed a -> Fixed a
+sub (MkFixed x) (MkFixed y) = MkFixed (x - y)
 
-absFixed : Fixed a -> Fixed a
-absFixed (MkFixed x) = MkFixed (abs x)
+export
+(-) : Fixed a -> Fixed a -> Fixed a
+(-) = sub
 
-fromIntegerFixed : Integer -> Fixed a
-fromIntegerFixed x = MkFixed x
+export
+negate: Fixed a -> Fixed a
+negate (MkFixed x) = MkFixed (negate x)
 
+export
+abs : Fixed a -> Fixed a
+abs (MkFixed x) = MkFixed (abs x)
+
+export
+fromInteger : Integer -> Fixed a
+fromInteger x = MkFixed x
+
+export
 multFixed : (HasResolution a) => Fixed a -> Fixed a -> Fixed a
 multFixed {a} fa@(MkFixed x) (MkFixed y) = MkFixed (x * y * (resolution {a} Fixed fa))
 
-toRationalFromFixed : (HasResolution a) => Fixed a -> Double
-toRationalFromFixed {a} fa@(MkFixed x) = (cast x) / cast (resolution {a} Fixed fa)
+export
+(*) : (HasResolution a) => Fixed a -> Fixed a -> Fixed a
+(*) = multFixed
 
-fraceDivFixed : (HasResolution a) => Fixed a -> Fixed a -> Fixed a
-fraceDivFixed fa@(MkFixed x) (MkFixed y) = MkFixed (div (x * (resolution {a} Fixed fa)) y)
+export
+toRational : (HasResolution a) => Fixed a -> Double
+toRational {a} fa@(MkFixed x) = (cast x) / cast (resolution {a} Fixed fa)
 
-recipFixed : (HasResolution a) => Fixed a -> Fixed a
-recipFixed {a} fa@(MkFixed x) = MkFixed (div ((resolution {a} Fixed fa) * (resolution {a} Fixed fa)) x)
+export
+fracDiv : (HasResolution a) => Fixed a -> Fixed a -> Fixed a
+fracDiv fa@(MkFixed x) (MkFixed y) = MkFixed (div (x * (resolution {a} Fixed fa)) y)
+
+export
+(/): (HasResolution a) => Fixed a -> Fixed a -> Fixed a
+(/) = fracDiv
+
+export
+recip : (HasResolution a) => Fixed a -> Fixed a
+recip {a} fa@(MkFixed x) = MkFixed (div ((resolution {a} Fixed fa) * (resolution {a} Fixed fa)) x)
+
 
 -- TODO:
 -- fromRationalFixed:

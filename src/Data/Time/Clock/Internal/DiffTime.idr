@@ -1,5 +1,7 @@
 module Data.Time.Clock.Internal.DiffTime
 
+import Data.Time.Clock.Internal.Fixed as F
+
 --import Data.Data
 --import Data.Fixed
 --import Data.Ratio ((%))
@@ -9,68 +11,57 @@ module Data.Time.Clock.Internal.DiffTime
 ||| Conversion functions will treat it as seconds.
 ||| It has a precision of 10^-12 s.
 public export
-data DiffTime = MkDiffTime Double -- We go with double here. Haskell uses Data.Fixed.Pico
+data DiffTime = MkDiffTime Pico
 
--- -- necessary because H98 doesn't have "cunning newtype" derivation
--- instance Enum DiffTime where
---     succ (MkDiffTime a) = MkDiffTime (succ a)
---     pred (MkDiffTime a) = MkDiffTime (pred a)
---     toEnum = MkDiffTime . toEnum
---     fromEnum (MkDiffTime a) = fromEnum a
---     enumFrom (MkDiffTime a) = fmap MkDiffTime (enumFrom a)
---     enumFromThen (MkDiffTime a) (MkDiffTime b) = fmap MkDiffTime (enumFromThen a b)
---     enumFromTo (MkDiffTime a) (MkDiffTime b) = fmap MkDiffTime (enumFromTo a b)
---     enumFromThenTo (MkDiffTime a) (MkDiffTime b) (MkDiffTime c) = fmap MkDiffTime (enumFromThenTo a b c)
+Enum DiffTime where
+  pred (MkDiffTime x) = MkDiffTime (pred x)
+  toNat (MkDiffTime x) = toNat x
+  fromNat x = MkDiffTime (fromNat x)
 
 Show DiffTime where
     show (MkDiffTime t) = show t
 
--- -- necessary because H98 doesn't have "cunning newtype" derivation
--- instance Num DiffTime where
---     (MkDiffTime a) + (MkDiffTime b) = MkDiffTime (a + b)
---     (MkDiffTime a) - (MkDiffTime b) = MkDiffTime (a - b)
---     (MkDiffTime a) * (MkDiffTime b) = MkDiffTime (a * b)
---     negate (MkDiffTime a) = MkDiffTime (negate a)
---     abs (MkDiffTime a) = MkDiffTime (abs a)
---     signum (MkDiffTime a) = MkDiffTime (signum a)
---     fromInteger i = MkDiffTime (fromInteger i)
+add: DiffTime -> DiffTime -> DiffTime
+add (MkDiffTime x) (MkDiffTime y) = MkDiffTime (x + y)
 
--- -- necessary because H98 doesn't have "cunning newtype" derivation
--- instance Real DiffTime where
---     toRational (MkDiffTime a) = toRational a
+(+) : DiffTime -> DiffTime -> DiffTime
+(+) = add
 
--- -- necessary because H98 doesn't have "cunning newtype" derivation
--- instance Fractional DiffTime where
---     (MkDiffTime a) / (MkDiffTime b) = MkDiffTime (a / b)
---     recip (MkDiffTime a) = MkDiffTime (recip a)
---     fromRational r = MkDiffTime (fromRational r)
+minus: DiffTime -> DiffTime -> DiffTime
+minus (MkDiffTime x) (MkDiffTime y) = MkDiffTime (x - y)
 
--- -- necessary because H98 doesn't have "cunning newtype" derivation
--- instance RealFrac DiffTime where
---     properFraction (MkDiffTime a) = let
---         (b', a') = properFraction a
---         in (b', MkDiffTime a')
---     truncate (MkDiffTime a) = truncate a
---     round (MkDiffTime a) = round a
---     ceiling (MkDiffTime a) = ceiling a
---     floor (MkDiffTime a) = floor a
+negate: DiffTime -> DiffTime
+negate (MkDiffTime x) = MkDiffTime (negate x)
 
--- -- | Create a 'DiffTime' which represents an integral number of seconds.
--- export
--- secondsToDiffTime :: Integer -> DiffTime
--- secondsToDiffTime = fromInteger
+abs : DiffTime-> DiffTime
+abs (MkDiffTime x) = MkDiffTime (abs x)
 
--- -- | Create a 'DiffTime' from a number of picoseconds.
--- export
--- picosecondsToDiffTime :: Integer -> DiffTime
--- picosecondsToDiffTime x = MkDiffTime (MkFixed x)
+fromInteger : Integer -> DiffTime
+fromInteger x = MkDiffTime (MkFixed x)
 
--- -- | Get the number of picoseconds in a 'DiffTime'.
--- export
--- diffTimeToPicoseconds :: DiffTime -> Integer
--- diffTimeToPicoseconds (MkDiffTime (MkFixed x)) = x
+mult: DiffTime -> DiffTime -> DiffTime
+mult (MkDiffTime x) (MkDiffTime y) = MkDiffTime (x * y)
 
--- {-# RULES
--- "realToFrac/DiffTime->Pico" realToFrac = \ (MkDiffTime ps) -> ps
--- "realToFrac/Pico->DiffTime" realToFrac = MkDiffTime
---  #-}
+(*): DiffTime -> DiffTime -> DiffTime
+(*) = mult
+
+toRational: DiffTime -> Double
+toRational (MkDiffTime x) = (toRational x)
+
+fracDiv: DiffTime -> DiffTime -> DiffTime
+fracDiv (MkDiffTime x) (MkDiffTime y) = MkDiffTime (fracDiv x y)
+
+(/): DiffTime -> DiffTime -> DiffTime
+(/) = fracDiv
+
+recip : DiffTime -> DiffTime
+recip (MkDiffTime x) = MkDiffTime (recip x)
+
+secondsToDiffTime: Integer -> DiffTime
+secondsToDiffTime = fromInteger
+
+picosecondsToDiffTime: Integer -> DiffTime
+picosecondsToDiffTime x = MkDiffTime (MkFixed x)
+
+diffTimeToPicoseconds : DiffTime -> Integer
+diffTimeToPicoseconds (MkDiffTime (MkFixed x)) = x
