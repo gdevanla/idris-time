@@ -19,9 +19,11 @@ public export
 Show (Fixed a) where
   show (MkFixed x) = show x
 
+export
 Eq (Fixed a) where
   (MkFixed a) == (MkFixed b) = a == b
 
+export
 Ord (Fixed a) where
   compare (MkFixed a) (MkFixed b) = compare a b
 

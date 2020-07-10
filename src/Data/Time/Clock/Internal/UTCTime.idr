@@ -11,11 +11,8 @@
 
 module Data.Time.Clock.Internal.UTCTime
 
-
---import Control.DeepSeq
---import Data.Data
---import Data.Time.Calendar.Days
---import Data.Time.Clock.Internal.DiffTime
+import Data.Time.Clock.Internal.DiffTime
+import Data.Time.Calendar.Days
 
 ||| This is the simplest representation of UTC.
 ||| It consists of the day number, and a time offset from midnight.
@@ -23,9 +20,9 @@ module Data.Time.Clock.Internal.UTCTime
 record UTCTime where
   constructor MkUTCTime
   ||| utctDay the day
-  utctDay : Int
+  utctDay : Day
   |||  utctDayTime the time from midnight, 0 <= t < 86401s (because of leap-seconds)
-  utctDayTime : Int
+  utctDayTime : DiffTime
 
 -- instance NFData UTCTime where
 --     rnf (UTCTime d t) = rnf d `seq` rnf t `seq` ()

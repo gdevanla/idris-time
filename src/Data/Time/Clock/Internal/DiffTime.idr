@@ -13,13 +13,23 @@ import Data.Time.Clock.Internal.Fixed as F
 public export
 data DiffTime = MkDiffTime Pico
 
+export
 Enum DiffTime where
   pred (MkDiffTime x) = MkDiffTime (pred x)
   toNat (MkDiffTime x) = toNat x
   fromNat x = MkDiffTime (fromNat x)
 
+export
 Show DiffTime where
     show (MkDiffTime t) = show t
+
+export
+Eq DiffTime where
+  (MkDiffTime a) == (MkDiffTime b) = a == b
+
+export
+Ord DiffTime where
+  compare (MkDiffTime a) (MkDiffTime b) = compare a b
 
 add: DiffTime -> DiffTime -> DiffTime
 add (MkDiffTime x) (MkDiffTime y) = MkDiffTime (x + y)
