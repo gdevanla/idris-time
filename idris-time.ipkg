@@ -14,3 +14,4 @@ main = Main
 modules = Data.Time.Clock.Internal.UTCTime
         , Data.Time.Clock.Internal.Fixed
         , Data.Time.Calendar.Days
+        , Data.Time.Calendar.Week
