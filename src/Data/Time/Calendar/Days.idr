@@ -14,6 +14,11 @@ Ord Day where
   compare (MkModifiedJulianDay a) (MkModifiedJulianDay b) = compare a b
 
 export
+toInteger : Day -> Integer
+toInteger (MkModifiedJulianDay x) = x
+
+
+export
 Enum Day where
   pred (MkModifiedJulianDay x) = MkModifiedJulianDay (pred x)
   toNat (MkModifiedJulianDay x) = toNat x
