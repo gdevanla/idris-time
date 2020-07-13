@@ -17,3 +17,4 @@ modules = Data.Time.Clock.Internal.UTCTime
         , Data.Time.Calendar.Week
         , Data.Time.Calendar.Private
         , Data.Time.Calendar.OrdinalDate
+        , Data.Time.Calendar.MonthDay
