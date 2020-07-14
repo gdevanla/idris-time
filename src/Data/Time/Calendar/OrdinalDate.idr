@@ -11,6 +11,7 @@ isLeapYear year = (mod year 4 == 0) && ((mod year 400 == 0) || not (mod year 100
 
 -- | Convert to ISO 8601 Ordinal Date format. First element of result is year (proleptic Gregoran calendar),
 -- second is the day of the year, with 1 for Jan 1, and 365 (or 366 in leap years) for Dec 31.
+export
 toOrdinalDate : Day -> (Integer, Int)
 toOrdinalDate (MkModifiedJulianDay mjd) =
   let
@@ -66,6 +67,7 @@ fromOrdinalDateValid year day = do
     pure (MkModifiedJulianDay mjd)
 
 ||| Show in ISO 8601 Ordinal Date format (yyyy-ddd)
+export
 showOrdinalDate : Day -> String
 showOrdinalDate date =
   let (y, d) = toOrdinalDate date
@@ -75,6 +77,7 @@ showOrdinalDate date =
 ||| Get the number of the Monday-starting week in the year and the day of the week.
 ||| The first Monday is the first day of week 1, any earlier days in the year are week 0 (as @%W@ in 'Data.Time.Format.formatTime').
 |||Monday is 1, Sunday is 7 (as @%u@ in 'Data.Time.Format.formatTime').
+export
 mondayStartWeek : Day -> (Int, Int)
 mondayStartWeek date@(MkModifiedJulianDay dateint) =
   let
@@ -87,6 +90,7 @@ mondayStartWeek date@(MkModifiedJulianDay dateint) =
 ||| Get the number of the Sunday-starting week in the year and the day of the week.
 ||| The first Sunday is the first day of week 1, any earlier days in the year are week 0 (as @%U@ in 'Data.Time.Format.formatTime').
 ||| Sunday is 0, Saturday is 6 (as @%w@ in 'Data.Time.Format.formatTime').
+export
 sundayStartWeek : Day -> (Int, Int)
 sundayStartWeek date@(MkModifiedJulianDay dateint) =
   let
@@ -101,6 +105,7 @@ sundayStartWeek date@(MkModifiedJulianDay dateint) =
 ||| the number of the Monday-starting week, and the day of the week.
 ||| The first Monday is the first day of week 1, any earlier days in the year
 ||| are week 0 (as @%W@ in 'Data.Time.Format.formatTime').
+export
 fromMondayStartWeek:
        Integer -- ^ Year.
     -> Int -- ^ Monday-starting week number (as @%W@ in 'Data.Time.Format.formatTime').
@@ -121,6 +126,7 @@ fromMondayStartWeek year w d = let
     in
       addDays zbYearDay firstDay
 
+export
 fromMondayStartWeekValid :
        Integer -- ^ Year.
     -> Int -- ^ Monday-starting week number (as @%W@ in 'Data.Time.Format.formatTime').
@@ -152,6 +158,7 @@ fromMondayStartWeekValid year w d = do
 ||| the number of the day of a Sunday-starting week.
 ||| The first Sunday is the first day of week 1, any earlier days in the
 ||| year are week 0 (as @%U@ in 'Data.Time.Format.formatTime').
+export
 fromSundayStartWeek:
        Integer -- ^ Year.
     -> Int -- ^ Sunday-starting week number (as @%U@ in 'Data.Time.Format.formatTime').
@@ -171,6 +178,7 @@ fromSundayStartWeek year w d = let
     zbYearDay = zbFirstSunday + 7 * cast zbWeek + cast zbDay
     in addDays zbYearDay firstDay
 
+export
 fromSundayStartWeekValid:
   Integer -- ^ Year.
   -> Int -- ^ Sunday-starting week number (as @%U@ in 'Data.Time.Format.formatTime').
