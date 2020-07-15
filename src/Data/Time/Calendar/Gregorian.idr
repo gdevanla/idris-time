@@ -29,31 +29,28 @@ fromGregorian year month day = do
   let day = fromOrdinalDate year day_of_year
   pure day
 
--- -- | Convert from proleptic Gregorian calendar. First argument is year, second month number (1-12), third day (1-31).
--- -- Invalid values will return Nothing
--- fromGregorianValid :: Integer -> Int -> Int -> Maybe Day
--- fromGregorianValid year month day = do
---     doy <- monthAndDayToDayOfYearValid (isLeapYear year) month day
---     fromOrdinalDateValid year doy
+||| Show in ISO 8601 format (yyyy-mm-dd)
+showGregorian: Day -> String
+showGregorian date =
+  let
+    (y, m, d) = toGregorian date
+  in
+    (show4 y) ++ "-" ++ (show2 m) ++ "-" ++ (show2 d)
 
--- -- | Show in ISO 8601 format (yyyy-mm-dd)
--- showGregorian :: Day -> String
--- showGregorian date = (show4 y) ++ "-" ++ (show2 m) ++ "-" ++ (show2 d)
---   where
---     (y, m, d) = toGregorian date
+||| The number of days in a given month according to the proleptic Gregorian calendar. First argument is year, second is month.
+gregorianMonthLength: Integer -> Fin 12 -> Nat
+gregorianMonthLength year month = index month $ monthLengths (isLeapYear year)
 
--- -- | The number of days in a given month according to the proleptic Gregorian calendar. First argument is year, second is month.
--- gregorianMonthLength :: Integer -> Int -> Int
--- gregorianMonthLength year = monthLength (isLeapYear year)
+rolloverMonths: (Integer, Integer) -> (Integer, Int)
+rolloverMonths (y, m) = (y + (div (m - 1) 12), integerToInt ((mod (m - 1) 12) + 1))
 
--- rolloverMonths :: (Integer, Integer) -> (Integer, Int)
--- rolloverMonths (y, m) = (y + (div (m - 1) 12), fromIntegral (mod (m - 1) 12) + 1)
-
--- addGregorianMonths :: Integer -> Day -> (Integer, Int, Int)
--- addGregorianMonths n day = (y', m', d)
---   where
---     (y, m, d) = toGregorian day
---     (y', m') = rolloverMonths (y, fromIntegral m + n)
+addGregorianMonths: Integer -> Day -> (Integer, Int, Int)
+addGregorianMonths n day =
+  let
+    (y, m, d) = toGregorian day
+    (y', m') = rolloverMonths (y, cast m + n)
+  in
+    (y', m', d)
 
 -- -- | Add months, with days past the last day of the month clipped to the last day.
 -- -- For instance, 2005-01-30 + 1 month = 2005-02-28.
@@ -127,5 +124,5 @@ fromGregorian year month day = do
 --     in CalendarDiffDays ymAllowed $ diffDays day2 dayAllowed
 
 -- -- orphan instance
--- instance Show Day where
---     show = showGregorian
+Show Day where
+  show = showGregorian
