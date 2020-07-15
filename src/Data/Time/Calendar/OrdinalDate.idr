@@ -6,6 +6,7 @@ import Data.Time.Calendar.Private
 
 
 ||| Is this year a leap year according to the proleptic Gregorian calendar?
+export
 isLeapYear : Integer -> Bool
 isLeapYear year = (mod year 4 == 0) && ((mod year 400 == 0) || not (mod year 100 == 0))
 

@@ -4,13 +4,30 @@ import Data.Vect
 
 import Data.Time.Calendar.Private
 
+export
 monthLengths: Bool -> Vect 12 Nat
 monthLengths False = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 monthLengths True = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 
-
+export
 dayLengthBounds : Fin 12  -> Vect 12 Nat -> Type
 dayLengthBounds x xs  = Fin $ succ $ index x xs
+
+export
+DayBounds : Fin 12 -> Bool -> Type
+DayBounds n isLeap =  (dayLengthBounds n (monthLengths isLeap))
+
+
+-- defDayLengthBounds : (n: Fin 12) ->  (dayLengthBounds n (monthLengths isLeap))
+-- defDayLengthBounds x = Vect.index x (monthLengths True)
+
+-- hole : (n : Integer) -> ((n1 : Nat) -> Maybe (Fin n1)) -> Fin 32
+-- hole n f = ?hole_rhs
+
+||| Used to clip the days value to a typed bounded value based on the provided month and isLeap value
+export
+boundedDay: (n: Int) -> (month: Fin 12) -> (isLeap: Bool) -> Maybe (DayBounds month isLeap)
+boundedDay x m isLeap = integerToFin (cast x) (S (Vect.index m (monthLengths isLeap)))
 
 
 -- construct_prf : (n: Nat) -> (xs: List a) -> (prf: NonEmpty xs) ->  InBounds n xs
@@ -25,6 +42,7 @@ dayLengthBounds x xs  = Fin $ succ $ index x xs
 
 -- | The length of a given month in the Gregorian or Julian calendars.
 -- First arg is leap year flag.
+export
 monthLength: Bool -> Fin 12 -> Nat
 monthLength isLeap month' =
   let
@@ -37,7 +55,8 @@ monthLength isLeap month' =
 
 -- ||| Convert month and day in the Gregorian or Julian calendars to day of year.
 -- ||| First arg is leap year flag.
-monthAndDayToDayOfYear : (isLeap: Bool) -> (n: Fin 12) -> (dayLengthBounds n (monthLengths isLeap))  -> Integer
+export
+monthAndDayToDayOfYear : (isLeap: Bool) -> (n: Fin 12) -> DayBounds n isLeap -> Integer
 monthAndDayToDayOfYear isLeap month day' =
   let
     month' = succ month

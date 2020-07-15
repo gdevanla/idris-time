@@ -1,5 +1,7 @@
 module Data.Time.Calendar.Gregorian
 
+import Data.Vect
+
 --import Data.Time.Calendar.CalendarDiffDays
 import Data.Time.Calendar.Days
 import Data.Time.Calendar.MonthDay
@@ -15,10 +17,20 @@ toGregorian date =
   in
      (year, month, day)
 
--- -- | Convert from proleptic Gregorian calendar. First argument is year, second month number (1-12), third day (1-31).
+-- ||| Convert from proleptic Gregorian calendar. First argument is year, second month number (1-12), third day (1-31).
 -- -- Invalid values will be clipped to the correct range, month first, then day.
--- fromGregorian :: Integer -> Int -> Int -> Day
--- fromGregorian year month day = fromOrdinalDate year (monthAndDayToDayOfYear (isLeapYear year) month day)
+fromGregorian: Integer -> Fin 12 -> Int -> Maybe Day
+fromGregorian year month day =
+  let
+    isLeap = (isLeapYear year)
+    bounded_day = boundedDay day month isLeap
+    z = case bounded_day of
+             Just x => Just (MkModifiedJulianDay (monthAndDayToDayOfYear isLeap month x))
+             Nothing => Nothing
+  in
+    z
+
+    --fromOrdinalDate year ?hole --(monthAndDayToDayOfYear (isLeapYear year) month day)
 
 -- -- | Convert from proleptic Gregorian calendar. First argument is year, second month number (1-12), third day (1-31).
 -- -- Invalid values will return Nothing
