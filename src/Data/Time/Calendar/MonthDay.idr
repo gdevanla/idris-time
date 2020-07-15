@@ -59,16 +59,14 @@ export
 monthAndDayToDayOfYear : (isLeap: Bool) -> (n: Fin 12) -> DayBounds n isLeap -> Integer
 monthAndDayToDayOfYear isLeap month day' =
   let
-    month' = succ month
     day' = day'
-    month'' = month'
     k =
-      if month' <= 2
+      if month <= 2
         then 0
         else if isLeap
                 then -1
                 else -2
-    res = (div (367 * finToInteger month'' - 362) 12) + k + cast day'
+    res = (div (367 * finToInteger month - 362) 12) + k + cast day'
   in
     res
 
