@@ -9,6 +9,7 @@ import Data.Time.Calendar.OrdinalDate
 import Data.Time.Calendar.Private
 
 -- | Convert to proleptic Gregorian calendar. First element of result is year, second month number (1-12), third day (1-31).
+export
 toGregorian : Day -> (Integer, Int, Int)
 toGregorian date =
   let
@@ -19,18 +20,14 @@ toGregorian date =
 
 -- ||| Convert from proleptic Gregorian calendar. First argument is year, second month number (1-12), third day (1-31).
 -- -- Invalid values will be clipped to the correct range, month first, then day.
+export
 fromGregorian: Integer -> Fin 12 -> Int -> Maybe Day
-fromGregorian year month day =
-  let
-    isLeap = (isLeapYear year)
-    bounded_day = boundedDay day month isLeap
-    z = case bounded_day of
-             Just x => Just (MkModifiedJulianDay (monthAndDayToDayOfYear isLeap month x))
-             Nothing => Nothing
-  in
-    z
-
-    --fromOrdinalDate year ?hole --(monthAndDayToDayOfYear (isLeapYear year) month day)
+fromGregorian year month day = do
+  let isLeap = (isLeapYear year)
+  bd <- boundedDay day month isLeap
+  let day_of_year = monthAndDayToDayOfYear isLeap month bd
+  let day = fromOrdinalDate year day_of_year
+  pure day
 
 -- -- | Convert from proleptic Gregorian calendar. First argument is year, second month number (1-12), third day (1-31).
 -- -- Invalid values will return Nothing
