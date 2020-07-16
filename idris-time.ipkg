@@ -18,3 +18,4 @@ modules = Data.Time.Clock.Internal.UTCTime
         , Data.Time.Calendar.Private
         , Data.Time.Calendar.OrdinalDate
         , Data.Time.Calendar.MonthDay
+        , Data.Time.Calendar.Gregorian
