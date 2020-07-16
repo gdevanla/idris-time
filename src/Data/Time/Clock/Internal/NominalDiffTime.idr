@@ -2,14 +2,6 @@ module Data.Time.Clock.Internal.NominalDiffTime
 
 import Data.Time.Clock.Internal.Fixed as F
 
---import Data.Data
---import Data.Fixed
---import Data.Ratio ((%))
---import Data.Typeable
-
-||| This is a length of time, as measured by a clock.
-||| Conversion functions will treat it as seconds.
-||| It has a precision of 10^-12 s.
 public export
 data NominalDiffTime = MkNominalDiffTime Pico
 
@@ -75,3 +67,8 @@ picosecondsToNominalDiffTime x = MkNominalDiffTime (MkFixed x)
 
 diffTimeToPicoseconds : NominalDiffTime -> Integer
 diffTimeToPicoseconds (MkNominalDiffTime (MkFixed x)) = x
+
+-- | One day in 'NominalDiffTime'.
+export
+nominalDay: NominalDiffTime
+nominalDay = 86400
