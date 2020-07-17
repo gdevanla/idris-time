@@ -30,6 +30,7 @@ record SystemTime where
 
 -- | Get the system time, epoch start of 1970 UTC, leap-seconds ignored.
 -- 'getSystemTime' is typically much faster than 'getCurrentTime'.
+export
 getSystemTime: IO SystemTime
 getSystemTime = do
   (MkCTimeSpec x y) <- clock_gettime

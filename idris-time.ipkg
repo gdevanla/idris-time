@@ -21,3 +21,4 @@ modules = Data.Time.Clock.Internal.UTCTime
         , Data.Time.Calendar.Gregorian
         , Data.Time.Clock.Internal.SystemTime
         , Data.Time.Clock.System
+        , Data.DateTime
