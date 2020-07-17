@@ -70,8 +70,10 @@ recip (MkDiffTime x) = MkDiffTime (recip x)
 secondsToDiffTime: Integer -> DiffTime
 secondsToDiffTime = fromInteger
 
+export
 picosecondsToDiffTime: Integer -> DiffTime
 picosecondsToDiffTime x = MkDiffTime (MkFixed x)
 
+export
 diffTimeToPicoseconds : DiffTime -> Integer
 diffTimeToPicoseconds (MkDiffTime (MkFixed x)) = x

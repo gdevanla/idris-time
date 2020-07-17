@@ -17,6 +17,7 @@ import Data.Time.Calendar.Days
 ||| This is the simplest representation of UTC.
 ||| It consists of the day number, and a time offset from midnight.
 ||| Note that if a day has a leap second added to it, it will have 86401 seconds.
+public export
 record UTCTime where
   constructor MkUTCTime
   ||| utctDay the day

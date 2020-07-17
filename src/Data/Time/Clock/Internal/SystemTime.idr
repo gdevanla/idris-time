@@ -5,9 +5,9 @@ module Data.Time.Clock.Internal.SystemTime
     -- , getTAISystemTime
     -- ) where
 
-import Data.Bits32
+--import Data.Bits32
 
-import Data.Data
+--import Data.Data
 --import Control.DeepSeq
 --import Data.Int (Int64)
 import Data.Time.Clock.Internal.DiffTime
@@ -15,59 +15,44 @@ import Data.Time.Clock.Internal.DiffTime
 --#include "HsTimeConfig.h"
 
 import Internal.CTimespec
+import Data.Time.Clock.Internal.Fixed
 
 --------------------------------------------------------------------------------
 
 -- | 'SystemTime' is time returned by system clock functions.
 -- Its semantics depends on the clock function, but the epoch is typically the beginning of 1970.
 -- Note that 'systemNanoseconds' of 1E9 to 2E9-1 can be used to represent leap seconds.
-record SystemTime =
+public export
+record SystemTime where
   constructor MkSystemTime
   systemSeconds: Integer
-  systemNanoseconds: Bits32
+  systemNanoseconds: Integer
 
 -- | Get the system time, epoch start of 1970 UTC, leap-seconds ignored.
 -- 'getSystemTime' is typically much faster than 'getCurrentTime'.
-getSystemTime :: IO SystemTime
--- | The resolution of 'getSystemTime', 'getCurrentTime', 'getPOSIXTime'
-getTime_resolution :: DiffTime
--- | If supported, get TAI time, epoch start of 1970 TAI, with resolution.
--- This is supported only on UNIX systems, and only those with CLOCK_TAI available at run-time.
-getTAISystemTime :: Maybe (DiffTime, IO SystemTime)
-#ifdef mingw32_HOST_OS
--- On Windows, the equlvalent of POSIX time is "file time", defined as
--- the number of 100-nanosecond intervals that have elapsed since
--- 12:00 A.M. January 1, 1601 (UTC).  We can convert this into a POSIX
--- time by adjusting the offset to be relative to the POSIX epoch.
+getSystemTime: IO SystemTime
 getSystemTime = do
-    Win32.FILETIME ft <- Win32.getSystemTimeAsFileTime
-    let (s, us) = (ft - win32_epoch_adjust) `divMod` 10000000
-    return (MkSystemTime (fromIntegral s) (fromIntegral us * 100))
-  where
-    win32_epoch_adjust :: Word64
-    win32_epoch_adjust = 116444736000000000
+  (MkCTimeSpec x y) <- clock_gettime
+  pure $ MkSystemTime x y
 
-getTime_resolution = 100E-9 -- 100ns
+-- | The resolution of 'getSystemTime', 'getCurrentTime', 'getPOSIXTime'
+-- | TODO: Fix this.
+--getTime_resolution: DiffTime
+-- getTime_resolution = 100E-9 -- 100ns
 
-getTAISystemTime = Nothing
-#elif defined(HAVE_CLOCK_GETTIME)
--- Use hi-res clock_gettime
-timespecToSystemTime :: CTimespec -> SystemTime
-timespecToSystemTime (MkCTimespec (CTime s) (CLong ns)) = (MkSystemTime (fromIntegral s) (fromIntegral ns))
+timespecToSystemTime: CTimeSpec -> SystemTime
+timespecToSystemTime (MkCTimeSpec s ns) = (MkSystemTime s ns)
 
-timespecToDiffTime :: CTimespec -> DiffTime
-timespecToDiffTime (MkCTimespec (CTime s) ns) = (fromIntegral s) + (fromIntegral ns) * 1E-9
+-- TODO: Currently nano second resolution does not work
+timespecToDiffTime: CTimeSpec -> DiffTime
+timespecToDiffTime (MkCTimeSpec s ns) = MkDiffTime (MkFixed (s)) -- + (ns  * 1E-9)))
 
-clockGetSystemTime :: ClockID -> IO SystemTime
-clockGetSystemTime clock = fmap timespecToSystemTime $ clockGetTime clock
+--clockGetSystemTime :: ClockID -> IO SystemTime
+--clockGetSystemTime clock = fmap timespecToSystemTime $ clockGetTime clock
 
-getSystemTime = clockGetSystemTime clock_REALTIME
+--getSystemTime = clockGetSystemTime clock_REALTIME
 
-getTime_resolution = timespecToDiffTime realtimeRes
+--getTime_resolution = timespecToDiffTime realtimeRes
 
 -- Use gettimeofday
-getSystemTime = do
-    MkCTimeval (CLong s) (CLong us) <- getCTimeval
-    return (MkSystemTime (fromIntegral s) (fromIntegral us * 1000))
-
-getTime_resolution = 1E-6 -- microsecond
+-- getTime_resolution = 1E-6 -- microsecond

@@ -5,7 +5,7 @@ import Internal.CTimespec
 main : IO ()
 main = do
   putStrLn $ show !clock_gettime
-  putStrLn $ show !clock_getres
+  --putStrLn $ show !clock_getres
   pure ()
   -- mem <- alloc time_spec
   --   v <- get_time !ClockRealTime mem
