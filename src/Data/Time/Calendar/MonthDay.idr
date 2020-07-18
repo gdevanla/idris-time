@@ -10,6 +10,17 @@ monthLengths False = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 monthLengths True = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 
 export
+monthSum: Bool -> Vect 12 Nat
+monthSum False = [31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365]
+monthSum True = [31, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335, 366]
+
+
+export
+YearBound : (isLeap: Bool) -> Type
+YearBound False = Fin 365
+YearBound True = Fin 366
+
+export
 dayLengthBounds : Fin 12  -> Vect 12 Nat -> Type
 dayLengthBounds x xs  = Fin $ succ $ index x xs
 
@@ -28,6 +39,10 @@ DayBounds n isLeap =  (dayLengthBounds n (monthLengths isLeap))
 export
 boundedDay: (n: Int) -> (month: Fin 12) -> (isLeap: Bool) -> Maybe (DayBounds month isLeap)
 boundedDay x m isLeap = integerToFin (cast x) (S (Vect.index m (monthLengths isLeap)))
+
+export
+boundedDay': (n: Int) -> (month: Fin 12) -> (isLeap: Bool) -> Nat
+boundedDay' x m isLeap = Vect.index m (monthLengths isLeap)
 
 
 -- construct_prf : (n: Nat) -> (xs: List a) -> (prf: NonEmpty xs) ->  InBounds n xs
@@ -56,7 +71,7 @@ monthLength isLeap month' =
 -- ||| Convert month and day in the Gregorian or Julian calendars to day of year.
 -- ||| First arg is leap year flag.
 export
-monthAndDayToDayOfYear : (isLeap: Bool) -> (n: Fin 12) -> DayBounds n isLeap -> Integer
+monthAndDayToDayOfYear : (isLeap: Bool) -> (n: Fin 12) -> Nat -> Integer
 monthAndDayToDayOfYear isLeap month day' =
   let
     day' = day'
@@ -93,16 +108,35 @@ findMonthDay (y :: xs) yd =
   then (\(m, d) => (m + 1, d)) (findMonthDay xs (yd - cast y))
   else (1, yd)
 
--- findMonthDay (n::ns) yd =
---   ()if yd > cast n then ((\(m, d) => (m + 1, d)) (findMonthDay ns (yd - n))) else (1, yd)
-
-
-||| Convert day of year in the Gregorian or Julian calendars to month and day.
-||| First arg is leap year flag.
 export
-dayOfYearToMonthAndDay : Bool -> Int -> (Int, Int)
-dayOfYearToMonthAndDay isLeap yd =
-  let
-    clipped = (clip 1 (if isLeap then 366 else 365)  yd)
-  in
-    findMonthDay (monthLengths isLeap) clipped
+findDay: Vect n Nat -> Int -> Int
+findDay (y :: xs) yd =
+  if yd > cast y
+  then findDay xs (yd - cast y)
+  else yd
+
+export
+findMonth : (m: Fin 12) -> (isLeap: Bool) -> (x: YearBound True)  -> Fin 12
+findMonth FZ isLeap x = if (finToInteger x) > cast (Vect.index FZ (monthSum isLeap)) then (FS FZ) else FZ
+findMonth (FS y) isLeap x = if (finToInteger x) > cast (Vect.index (FS y) (monthSum isLeap)) then succ (FS y) else findMonth (pred (FS y)) isLeap x
+
+
+--- if (finToInteger x) < cast (Vect.index (FS y) (monthSum isLeap)) then (FS y) else findMonth (pred (FS y)) isLeap x
+
+
+--findMonth: Vect n Nat -> Int -> Fin 12
+--findMonth xs x =  hole x xs
+
+
+-- ||| Convert day of year in the Gregorian or Julian calendars to month and day.
+-- ||| First arg is leap year flag.
+-- export
+-- dayOfYearToMonthAndDay : Bool -> Int -> (Fin 12, Int)
+-- dayOfYearToMonthAndDay isLeap yd =
+--   let
+--     clipped = (clip 1 (if isLeap then 366 else 365)  yd)
+--   in
+--     ((findMonth (FS 10) isLeap yd), (findDay (monthLengths isLeap) yd))
+
+
+--    ?findMonthDay (monthLengths isLeap) clipped
