@@ -8,55 +8,34 @@ import Data.Time.Calendar.MonthDay
 import Data.Time.Calendar.OrdinalDate
 import Data.Time.Calendar.Private
 
-export
-record Gregorian where
-  constructor MkGregorian
-  year: Integer
-  month: Fin 12
-  day: Int
-
-
 -- | Convert to proleptic Gregorian calendar. First element of result is year, second month number (1-12), third day (1-31).
 export
-toGregorian : Day -> Gregorian
+toGregorian : Day -> (Integer, Int, Int)
 toGregorian date =
   let
     (year, yd) = toOrdinalDate date
     (month, day) = dayOfYearToMonthAndDay (isLeapYear year) yd
   in
-     MkGregorian year month day
-
+     (year, month, day)
 
 -- ||| Convert from proleptic Gregorian calendar. First argument is year, second month number (1-12), third day (1-31).
 -- -- Invalid values will be clipped to the correct range, month first, then day.
--- export
--- fromGregorian: Integer -> Fin 12 -> Int -> Maybe Day
--- fromGregorian year month day = do
---   let isLeap = (isLeapYear year)
---   bd <- boundedDay' day month isLeap
---   let day_of_year = monthAndDayToDayOfYear isLeap month bd
---   let day = fromOrdinalDate year day_of_year
---   pure day
-
 export
-fromGregorian: Integer -> Fin 12 -> Int -> Day
-fromGregorian year month day =
-  let
-    isLeap = (isLeapYear year)
-    bd = boundedDay' day month isLeap
-    day_of_year = monthAndDayToDayOfYear isLeap month bd
-    day = fromOrdinalDate year day_of_year
-  in
-     day
-
+fromGregorian: Integer -> Fin 12 -> Int -> Maybe Day
+fromGregorian year month day = do
+  let isLeap = (isLeapYear year)
+  bd <- boundedDay day month isLeap
+  let day_of_year = monthAndDayToDayOfYear isLeap month bd
+  let day = fromOrdinalDate year day_of_year
+  pure day
 
 ||| Show in ISO 8601 format (yyyy-mm-dd)
--- showGregorian: Day -> String
--- showGregorian date =
---   let
---     (y, m, d) = toGregorian date
---   in
---     (show4 y) ++ "-" ++ (show2 (finToInteger m)) ++ "-" ++ (show2 d)
+showGregorian: Day -> String
+showGregorian date =
+  let
+    (y, m, d) = toGregorian date
+  in
+    (show4 y) ++ "-" ++ (show2 m) ++ "-" ++ (show2 d)
 
 ||| The number of days in a given month according to the proleptic Gregorian calendar. First argument is year, second is month.
 gregorianMonthLength: Integer -> Fin 12 -> Nat
@@ -65,13 +44,13 @@ gregorianMonthLength year month = index month $ monthLengths (isLeapYear year)
 rolloverMonths: (Integer, Integer) -> (Integer, Int)
 rolloverMonths (y, m) = (y + (div (m - 1) 12), integerToInt ((mod (m - 1) 12) + 1))
 
--- addGregorianMonths: Integer -> Day -> (Integer, Int, Int)
--- addGregorianMonths n day =
---   let
---     (y, m, d) = toGregorian day
---     (y', m') = rolloverMonths (y, cast m + n)
---   in
---     (y', m', d)
+addGregorianMonths: Integer -> Day -> (Integer, Int, Int)
+addGregorianMonths n day =
+  let
+    (y, m, d) = toGregorian day
+    (y', m') = rolloverMonths (y, cast m + n)
+  in
+    (y', m', d)
 
 -- -- | Add months, with days past the last day of the month clipped to the last day.
 -- -- For instance, 2005-01-30 + 1 month = 2005-02-28.
@@ -145,5 +124,5 @@ rolloverMonths (y, m) = (y + (div (m - 1) 12), integerToInt ((mod (m - 1) 12) + 
 --     in CalendarDiffDays ymAllowed $ diffDays day2 dayAllowed
 
 -- -- orphan instance
--- Show Day where
---   show = showGregorian
+Show Day where
+  show = showGregorian
