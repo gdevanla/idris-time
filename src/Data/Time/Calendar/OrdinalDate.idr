@@ -32,7 +32,7 @@ toOrdinalDate (MkModifiedJulianDay mjd) =
 -- | Convert from ISO 8601 Ordinal Date format.
 -- Invalid day numbers will be clipped to the correct range (1 to 365 or 366).
 export
-fromOrdinalDate : Integer -> Integer -> Day
+fromOrdinalDate : Integer -> Int -> Day
 fromOrdinalDate year day =
   let
     y = year - 1
@@ -41,7 +41,7 @@ fromOrdinalDate year day =
                   (if isLeapYear year
                     then 366
                     else 365)
-            day)
+            (cast day))
     a = (365 * y)
     b = (div y (the Integer 4))
     c = (div y (the Integer 100))

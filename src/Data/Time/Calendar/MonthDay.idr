@@ -71,7 +71,7 @@ monthLength isLeap month' =
 -- ||| Convert month and day in the Gregorian or Julian calendars to day of year.
 -- ||| First arg is leap year flag.
 export
-monthAndDayToDayOfYear : (isLeap: Bool) -> (n: Fin 12) -> Nat -> Integer
+monthAndDayToDayOfYear : (isLeap: Bool) -> Int -> Int -> Int
 monthAndDayToDayOfYear isLeap month day' =
   let
     day' = day'
@@ -81,7 +81,7 @@ monthAndDayToDayOfYear isLeap month day' =
         else if isLeap
                 then -1
                 else -2
-    res = (div (367 * finToInteger month - 362) 12) + k + cast day'
+    res = (div (367 * month - 362) 12) + k + day'
   in
     res
 
@@ -116,9 +116,16 @@ findDay (y :: xs) yd =
   else yd
 
 export
-findMonth : (m: Fin 12) -> (isLeap: Bool) -> (x: YearBound True)  -> Fin 12
-findMonth FZ isLeap x = if (finToInteger x) > cast (Vect.index FZ (monthSum isLeap)) then (FS FZ) else FZ
-findMonth (FS y) isLeap x = if (finToInteger x) > cast (Vect.index (FS y) (monthSum isLeap)) then succ (FS y) else findMonth (pred (FS y)) isLeap x
+findMonth : (m: Fin 12) -> (isLeap: Bool) -> Int  -> Fin 12
+findMonth FZ isLeap x = if x > cast (Vect.index FZ (monthSum isLeap)) then (FS FZ) else FZ
+findMonth (FS y) isLeap x = if x > cast (Vect.index (FS y) (monthSum isLeap)) then succ (FS y) else findMonth (pred (FS y)) isLeap x
+
+
+-- export
+-- findMonth' : (m: Fin 12) -> (in_m: Fin 12) (isLeap: Bool) -> (x: YearBound True)  -> (x ** DayBounds x isLeap)
+-- findMonth' FZ in_m isLeap x = if (finToInteger x) > cast (Vect.index FZ (monthSum isLeap)) then ((FS FZ),  else FZ
+-- findMonth' (FS y) in_m isLeap x = if (finToInteger x) > cast (Vect.index (FS y) (monthSum isLeap)) then succ (FS y) else findMonth (pred (FS y)) isLeap x
+
 
 
 --- if (finToInteger x) < cast (Vect.index (FS y) (monthSum isLeap)) then (FS y) else findMonth (pred (FS y)) isLeap x
@@ -130,13 +137,14 @@ findMonth (FS y) isLeap x = if (finToInteger x) > cast (Vect.index (FS y) (month
 
 -- ||| Convert day of year in the Gregorian or Julian calendars to month and day.
 -- ||| First arg is leap year flag.
--- export
--- dayOfYearToMonthAndDay : Bool -> Int -> (Fin 12, Int)
--- dayOfYearToMonthAndDay isLeap yd =
---   let
---     clipped = (clip 1 (if isLeap then 366 else 365)  yd)
---   in
---     ((findMonth (FS 10) isLeap yd), (findDay (monthLengths isLeap) yd))
+export
+dayOfYearToMonthAndDay : Bool -> Int -> (Int, Int)
+dayOfYearToMonthAndDay isLeap yd =
+  let
+    clipped = (clip 1 (if isLeap then 366 else 365)  yd)
+  in
+    findMonthDay (monthLengths isLeap) clipped
+    --((findMonth (FS 10) isLeap yd), (findDay (monthLengths isLeap) yd))
 
 
 --    ?findMonthDay (monthLengths isLeap) clipped

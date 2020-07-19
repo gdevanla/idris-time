@@ -1,10 +1,16 @@
 module Main
 
 import Internal.CTimespec
+import Data.DateTime
+import Data.Time.Calendar.Gregorian
 
 main : IO ()
 main = do
   putStrLn $ show !clock_gettime
+  x <- today
+  let y = addDays x 20
+  putStrLn $ show x
+  putStrLn $ show y
   --putStrLn $ show !clock_getres
   pure ()
   -- mem <- alloc time_spec

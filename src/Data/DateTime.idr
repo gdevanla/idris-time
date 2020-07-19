@@ -8,6 +8,7 @@ import Data.Time.Calendar.Gregorian
 import Internal.CTimespec
 import Data.Time.Calendar.Days
 import Data.Time.Clock.Internal.DiffTime
+import Data.Time.Calendar.Days
 
 import Data.Fin
 
@@ -15,15 +16,16 @@ DateTime: Type
 DateTime = UTCTime
 
 public export
-today : IO (Integer, Int, Int)
+today : IO Gregorian
 today = do
   let (MkUTCTime x y) = systemToUTCTime !getSystemTime
   pure $ toGregorian x
 
-
-addDays: (Integer, Int, Int) -> Integer -> (Integer, Int, Int)
-addDays (y, m, d) n =
+public export
+addDays: Gregorian -> Integer -> Gregorian
+addDays gregorian n =
   let
-    x = fromGregorian ?hole1
+    x = fromGregorian gregorian
+    new_gregororian = addDays n x
   in
-    ?hole
+    toGregorian new_gregororian
