@@ -24,8 +24,8 @@ systemToUTCTime (MkSystemTime seconds nanoseconds) =
     day = addDays days systemEpochDay
     timeSeconds = seconds `mod` 86400
     -- TODO: Add nanoseconds
-    timeNanoseconds = timeSeconds * get_nano_res -- TODO: add nanoseconds + ()
-    time = picosecondsToDiffTime (timeNanoseconds * 1000)
+    --timeNanoseconds = timeSeconds * get_nano_res -- TODO: add nanoseconds + ()
+    time = picosecondsToDiffTime (timeSeconds) -- * 1000)
   in
     MkUTCTime day time
 

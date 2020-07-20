@@ -29,3 +29,8 @@ addDays gregorian n =
     new_gregororian = addDays n x
   in
     toGregorian new_gregororian
+
+
+public export
+getUTCTime: IO UTCTime
+getUTCTime = pure $ systemToUTCTime !getSystemTime

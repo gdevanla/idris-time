@@ -22,3 +22,4 @@ modules = Data.Time.Clock.Internal.UTCTime
         , Data.Time.Clock.Internal.SystemTime
         , Data.Time.Clock.System
         , Data.DateTime
+        , Data.Time.LocalTime.Internal.TimeOfDay
