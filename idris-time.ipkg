@@ -23,3 +23,14 @@ modules = Data.Time.Clock.Internal.UTCTime
         , Data.Time.Clock.System
         , Data.DateTime
         , Data.Time.LocalTime.Internal.TimeOfDay
+        , Test.TestUtil
+        , Test.TestCTimespec
+        , Test.TestFixed
+
+tests = Test.TestCTimespec.testClockGetTime
+        , Test.TestFixed.testAdd
+        , Test.TestFixed.testSub
+        , Test.TestFixed.testNegate
+        , Test.TestFixed.testMultFixed
+        , Test.TestFixed.testFracDiv
+        , Test.TestFixed.testRecip

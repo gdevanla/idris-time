@@ -1,3 +1,4 @@
+||| Module that provides fixed-point number to represent seconds in nanoseconds.
 module Fixed
 
 public export
@@ -6,14 +7,20 @@ data Fixed a = MkFixed Integer
 public export
 data E12
 data E9
+data E2
+
+public export
+Dec : Type
+Dec = Fixed E2
 
 public export
 Pico : Type
 Pico = Fixed E12
 
-export
+public export
 Nano : Type
 Nano = Fixed E9
+
 
 public export
 Show (Fixed a) where
@@ -34,6 +41,10 @@ interface HasResolution (a: Type) where
 export
 HasResolution E12 where
   resolution _ _ =  1000000000000
+
+export
+HasResolution E2 where
+  resolution _ _ =  100
 
 public export
 Enum (Fixed a) where
@@ -76,16 +87,23 @@ fromInteger : Integer -> Fixed a
 fromInteger x = MkFixed x
 
 export
+toRational : (HasResolution a) => Fixed a -> Double
+toRational {a} fa@(MkFixed x) = (cast x) / cast (resolution {a} Fixed fa)
+
+export
 multFixed : (HasResolution a) => Fixed a -> Fixed a -> Fixed a
-multFixed {a} fa@(MkFixed x) (MkFixed y) = MkFixed (x * y * (resolution {a} Fixed fa))
+multFixed {a} fa@(MkFixed x) (MkFixed y) =
+  let
+    result =  div (x * y) (resolution {a} Fixed fa)
+  in
+    MkFixed result
+
+--MkFixed (x * y  * cast (1 / (resolution {a} Fixed fa)))
 
 export
 (*) : (HasResolution a) => Fixed a -> Fixed a -> Fixed a
 (*) = multFixed
 
-export
-toRational : (HasResolution a) => Fixed a -> Double
-toRational {a} fa@(MkFixed x) = (cast x) / cast (resolution {a} Fixed fa)
 
 export
 fracDiv : (HasResolution a) => Fixed a -> Fixed a -> Fixed a

@@ -47,7 +47,7 @@ time_spec = STRUCT [
   mkComposite I64 --min
   ]
 
-export
+public export
 record CTimeSpec where
   constructor MkCTimeSpec
   sec : Integer
