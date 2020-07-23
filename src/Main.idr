@@ -19,7 +19,6 @@ main = do
   --putStrLn $ show !clock_getres
   utcTime <- getUTCTime
   putStrLn $ show (utctDayTime utcTime)
-  putStrLn $ show (utctDayTime utcTime)
   let timeofday = timeToTimeOfDay (utctDayTime utcTime)
   putStrLn $ show (diffTimeToPicoseconds (utctDayTime utcTime))
   putStrLn $ "Time of day is = (fixed min) " ++ show timeofday

@@ -1,6 +1,6 @@
+||| Provie `Day` level function.
 module Data.Time.Calendar.Days
 
-||| TODO: Should we use Nat and bound the values
 ||| The Modified Julian Day is a standard count of days, with zero being the day 1858-11-17.
 public export
 data Day = MkModifiedJulianDay Integer
@@ -16,7 +16,6 @@ Ord Day where
 export
 toInteger : Day -> Integer
 toInteger (MkModifiedJulianDay x) = x
-
 
 export
 Enum Day where

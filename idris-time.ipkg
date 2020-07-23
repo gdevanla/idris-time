@@ -26,6 +26,7 @@ modules = Data.Time.Clock.Internal.UTCTime
         , Test.TestUtil
         , Test.TestCTimespec
         , Test.TestFixed
+        , Test.TestGregorian
 
 tests = Test.TestCTimespec.testClockGetTime
         , Test.TestFixed.testAdd
@@ -34,3 +35,9 @@ tests = Test.TestCTimespec.testClockGetTime
         , Test.TestFixed.testMultFixed
         , Test.TestFixed.testFracDiv
         , Test.TestFixed.testRecip
+        , Test.TestGregorian.test_toGregorian
+        , Test.TestGregorian.test_fromGregorian
+        , Test.TestGregorian.test_gregorianMonthLength
+        , Test.TestGregorian.test_gregorianMonthLengthNonLeap
+        , Test.TestGregorian.test_addGregorianMonths
+        , Test.TestGregorian.test_rolloverMonths

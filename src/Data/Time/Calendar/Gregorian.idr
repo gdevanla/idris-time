@@ -17,6 +17,11 @@ record Gregorian where
   day: Int
 
 
+export
+Eq Gregorian where
+  (MkGregorian y1 m1 d1) == (MkGregorian y2 m2 d2) = (y1 == y2) && (m1 == m2) && (d1 == d2)
+
+
 -- | Convert to proleptic Gregorian calendar. First element of result is year, second month number (1-12), third day (1-31).
 export
 toGregorian : Day -> Gregorian
@@ -52,6 +57,7 @@ fromGregorian gregorian =
      day
 
 
+
 ||| Show in ISO 8601 format (yyyy-mm-dd)
 -- export
 -- showGregorianFromDay: Day -> String
@@ -68,20 +74,22 @@ showGregorian (MkGregorian y m d) =
     (show4 y) ++ "-" ++ (show2 m) ++ "-" ++ (show2 d)
 
 
-
-
 ||| The number of days in a given month according to the proleptic Gregorian calendar. First argument is year, second is month.
+export
 gregorianMonthLength: Integer -> Fin 12 -> Nat
 gregorianMonthLength year month = index month $ monthLengths (isLeapYear year)
 
+export
 rolloverMonths: (Integer, Integer) -> (Integer, Int)
 rolloverMonths (y, m) = (y + (div (m - 1) 12), integerToInt ((mod (m - 1) 12) + 1))
 
-addGregorianMonths: Integer -> Day -> Gregorian
+||| TODO: Fail on negative value
+export
+addGregorianMonths: Nat -> Day -> Gregorian
 addGregorianMonths n day =
   let
     MkGregorian y m d = toGregorian day
-    (y', m') = rolloverMonths (y, cast m + n)
+    (y', m') = rolloverMonths (y, cast m + cast n)
   in
     MkGregorian  y' m' d
 

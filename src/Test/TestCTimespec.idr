@@ -3,7 +3,6 @@ module Test.TestCTimespec
 import Internal.CTimespec
 import Test.TestUtil
 
-
 export
 testClockGetTime : IO ()
 testClockGetTime = do
