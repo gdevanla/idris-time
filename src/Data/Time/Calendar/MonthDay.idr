@@ -85,22 +85,6 @@ monthAndDayToDayOfYear isLeap month day' =
   in
     res
 
---||| Convert month and day in the Gregorian or Julian calendars to day of year.
---||| First arg is leap year flag.
--- monthAndDayToDayOfYearValid :: Bool -> Int -> Int -> Maybe Int
--- monthAndDayToDayOfYearValid isLeap month day = do
---     month' <- clipValid 1 12 month
---     day' <- clipValid 1 (monthLength' isLeap month') day
---     let
---         day'' = fromIntegral day'
---         month'' = fromIntegral month'
---         k =
---             if month' <= 2
---                 then 0
---                 else if isLeap
---                          then -1
---                          else -2
---     return ((div (367 * month'' - 362) 12) + k + day'')
 export
 findMonthDay: Vect n Nat -> Int -> (Int, Int)
 findMonthDay (y :: xs) yd =
@@ -120,19 +104,11 @@ findMonth : (m: Fin 12) -> (isLeap: Bool) -> Int  -> Fin 12
 findMonth FZ isLeap x = if x > cast (Vect.index FZ (monthSum isLeap)) then (FS FZ) else FZ
 findMonth (FS y) isLeap x = if x > cast (Vect.index (FS y) (monthSum isLeap)) then succ (FS y) else findMonth (pred (FS y)) isLeap x
 
-
 -- export
 -- findMonth' : (m: Fin 12) -> (in_m: Fin 12) (isLeap: Bool) -> (x: YearBound True)  -> (x ** DayBounds x isLeap)
 -- findMonth' FZ in_m isLeap x = if (finToInteger x) > cast (Vect.index FZ (monthSum isLeap)) then ((FS FZ),  else FZ
 -- findMonth' (FS y) in_m isLeap x = if (finToInteger x) > cast (Vect.index (FS y) (monthSum isLeap)) then succ (FS y) else findMonth (pred (FS y)) isLeap x
 
-
-
---- if (finToInteger x) < cast (Vect.index (FS y) (monthSum isLeap)) then (FS y) else findMonth (pred (FS y)) isLeap x
-
-
---findMonth: Vect n Nat -> Int -> Fin 12
---findMonth xs x =  hole x xs
 
 
 -- ||| Convert day of year in the Gregorian or Julian calendars to month and day.
@@ -144,7 +120,3 @@ dayOfYearToMonthAndDay isLeap yd =
     clipped = (clip 1 (if isLeap then 366 else 365)  yd)
   in
     findMonthDay (monthLengths isLeap) clipped
-    --((findMonth (FS 10) isLeap yd), (findDay (monthLengths isLeap) yd))
-
-
---    ?findMonthDay (monthLengths isLeap) clipped
