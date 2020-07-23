@@ -2,3 +2,4 @@
 idris-time_doc
 idris-time-main
 *.hs
+.#*.idr
