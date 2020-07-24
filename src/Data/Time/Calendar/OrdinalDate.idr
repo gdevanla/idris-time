@@ -4,7 +4,6 @@ module Data.Time.Calendar.OrdinalDate
 import Data.Time.Calendar.Days
 import Data.Time.Calendar.Private
 
-
 ||| Is this year a leap year according to the proleptic Gregorian calendar?
 export
 isLeapYear : Integer -> Bool

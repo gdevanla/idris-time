@@ -13,7 +13,6 @@ data DayOfWeek
   | Sunday
 
 
-
 export
 Enum DayOfWeek where
   pred Monday = Tuesday

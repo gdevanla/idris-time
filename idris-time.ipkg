@@ -27,6 +27,7 @@ modules = Data.Time.Clock.Internal.UTCTime
         , Test.TestCTimespec
         , Test.TestFixed
         , Test.TestGregorian
+        , Test.TestOrdinalDate
 
 tests = Test.TestCTimespec.testClockGetTime
         , Test.TestFixed.testAdd
@@ -41,3 +42,4 @@ tests = Test.TestCTimespec.testClockGetTime
         , Test.TestGregorian.test_gregorianMonthLengthNonLeap
         , Test.TestGregorian.test_addGregorianMonths
         , Test.TestGregorian.test_rolloverMonths
+        , Test.TestOrdinalDate.test_toOrdinalDate
