@@ -13,15 +13,18 @@ import Data.Time.LocalTime.Internal.TimeOfDay
 
 import Data.Fin
 
+||| A structure that stores MJD as Days and Diff time
 DateTime: Type
 DateTime = UTCTime
 
+||| Return the Gregorian date based on the call to machine's getSystemTime
 public export
 today : IO Gregorian
 today = do
   let (MkUTCTime x y) = systemToUTCTime !getSystemTime
   pure $ toGregorian x
 
+||| Add days to Gregorian
 public export
 addDays: Gregorian -> Nat -> Gregorian
 addDays gregorian n =
@@ -31,10 +34,12 @@ addDays gregorian n =
   in
     toGregorian new_gregororian
 
+||| Build the DateTime object based on machince getSystemTime
 public export
-getUTCTime: IO UTCTime
+getUTCTime: IO DateTime
 getUTCTime = pure $ systemToUTCTime !getSystemTime
 
+||| Return the current TimeOfDay based on machine's getSystemTime
 public export
 getCurrentUTCTimeOfDay : IO TimeOfDay
 getCurrentUTCTimeOfDay = do
