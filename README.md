@@ -32,11 +32,13 @@ Projections:
 
 
         The function is: public export
+        
 *Main> :doc today
 Data.DateTime.today : IO Gregorian
     Return the Gregorian date based on the call to machine's getSystemTime
     
     The function is: possibly not total due to: Data.Time.Clock.Internal.SystemTime.getSystemTime & public export
+    
 *Main> :exec today
 2020-07-24
 ```
@@ -66,11 +68,13 @@ Projections:
         
         
         The function is: public export
+        
 *Main> :doc getCurrentUTCTimeOfDay 
 Data.DateTime.getCurrentUTCTimeOfDay : IO TimeOfDay
     Return the current TimeOfDay based on machine's getSystemTime
     
     The function is: possibly not total due to: Data.DateTime.getUTCTime & public export
+    
 *Main> :exec getCurrentUTCTimeOfDay 
 12:01:46
 ```
