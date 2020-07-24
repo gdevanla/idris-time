@@ -43,3 +43,6 @@ tests = Test.TestCTimespec.testClockGetTime
         , Test.TestGregorian.test_addGregorianMonths
         , Test.TestGregorian.test_rolloverMonths
         , Test.TestOrdinalDate.test_toOrdinalDate
+        , Test.TestOrdinalDate.test_fromOrdinalDate
+        , Test.TestOrdinalDate.test_fromOrdinalDateWithJust
+        , Test.TestOrdinalDate.test_fromOrdinalDateWithNothing
