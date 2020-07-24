@@ -85,3 +85,4 @@ Nice to Haves/Required Improvements
 - [ ] Formatting functions
 - [ ] Use specidris
 - [ ] Add to `elba`
+- [ ] A lot of functions are not total. Need more %total-ity checks.
