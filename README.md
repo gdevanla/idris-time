@@ -90,3 +90,4 @@ Nice to Haves/Required Improvements
 - [ ] Use specidris
 - [ ] Add to `elba`
 - [ ] A lot of functions are not total. Need more %total-ity checks.
+- [ ] Support Time resolution in nanoseconds.
