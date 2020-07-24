@@ -1,7 +1,7 @@
 # idris-time
 A port of GHC time library to Idris. 
 
-Currently, this library supports basis functionality in terms of UTC. All the calculation have been ported from (https://hackage.haskell.org/package/time). There is a lot of functionality that is available in Haskell `time` library that still needs to be added to this port. Contributions are welcome!
+Currently, this library supports basis functionality in terms of UTC. All the calculations have been ported from (https://hackage.haskell.org/package/time). There is a lot of functionality that is available in Haskell `time` library that still needs to be added to this port. Contributions are welcome!
 
 
 Examples
