@@ -3,7 +3,7 @@ module Data.Time.LocalTime.Internal.TimeOfDay
 import Data.Time.Clock.Internal.Fixed
 import Data.Time.Clock.Internal.DiffTime
 
-export
+public export
 record TimeOfDay where
   constructor MkTimeOfDay
   todHour: Integer

@@ -9,6 +9,7 @@ import Internal.CTimespec
 import Data.Time.Calendar.Days
 import Data.Time.Clock.Internal.DiffTime
 import Data.Time.Calendar.Days
+import Data.Time.LocalTime.Internal.TimeOfDay
 
 import Data.Fin
 
@@ -22,14 +23,20 @@ today = do
   pure $ toGregorian x
 
 public export
-addDays: Gregorian -> Integer -> Gregorian
+addDays: Gregorian -> Nat -> Gregorian
 addDays gregorian n =
   let
     x = fromGregorian gregorian
-    new_gregororian = addDays n x
+    new_gregororian = addDays (cast n) x
   in
     toGregorian new_gregororian
 
 public export
 getUTCTime: IO UTCTime
 getUTCTime = pure $ systemToUTCTime !getSystemTime
+
+public export
+getCurrentUTCTimeOfDay : IO TimeOfDay
+getCurrentUTCTimeOfDay = do
+  utcTime <- getUTCTime
+  pure $ timeToTimeOfDay (utctDayTime utcTime)
